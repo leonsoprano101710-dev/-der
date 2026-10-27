@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>???</title>
+    <style>
+        /* Importamos una fuente tipo terminal/máquina de escribir cruda */
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000000; /* Negro puro */
+            color: #d60000; /* Rojo crudo estilo The Batman */
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            overflow: hidden;
+        }
+
+        /* Ruido de fondo muy sutil para darle textura cinematográfica */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        /* Título misterioso con un sutil parpadeo (flicker) */
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 15px;
+            color: #ffffff; /* Blanco hueso para contrastar */
+            margin-bottom: 4rem;
+            animation: flicker 4s infinite alternate;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: baseline;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .number {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .ms-number {
+            font-size: 3rem; /* Milisegundos ligeramente más pequeños */
+            opacity: 0.8;
+        }
+
+        .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #555555;
+            margin-top: 15px;
+        }
+
+        /* Separadores (los dos puntos) */
+        .separator {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #555555;
+            transform: translateY(-25px);
+        }
+
+        /* Animación de parpadeo defectuoso para el misterio */
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.2;
+            }
+        }
+
+        /* Diseño responsivo para móviles */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .countdown { gap: 15px; flex-wrap: wrap; }
+            .number { font-size: 3rem; }
+            .ms-number { font-size: 2rem; }
+            .separator { display: none; } /* Ocultamos los separadores en móvil para que baje en bloques */
+            .time-unit { margin-bottom: 20px; width: 40%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>???</h1>
+        
+        <div class="countdown">
+            <div class="time-unit">
+                <span class="number" id="days">00</span>
+                <span class="label">Días</span>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="number" id="hours">00</span>
+                <span class="label">Hrs</span>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Min</span>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Seg</span>
+            </div>
+            <span class="separator" style="color:#d60000; opacity: 0.5;">.</span>
+            <div class="time-unit">
+                <span class="number ms-number" id="milliseconds">000</span>
+                <span class="label">Ms</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fecha objetivo: 5 de noviembre de 2026 a las 21:00:00 (9:00 PM)
+        const targetDate = new Date('2026-11-05T21:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference <= 0) {
+                document.querySelector('.countdown').innerHTML = '<h2 style="font-size: 2rem; color: #ffffff; letter-spacing: 10px;">TIEMPO AGOTADO</h2>';
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor(difference % 1000); 
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            document.getElementById('milliseconds').innerText = milliseconds.toString().padStart(3, '0');
+
+            requestAnimationFrame(updateCountdown);
+        }
+
+        requestAnimationFrame(updateCountdown);
+    </script>
+
+</body>
+</html>
